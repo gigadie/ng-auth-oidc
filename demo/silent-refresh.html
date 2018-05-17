@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+	<head></head>
+	<body>
+		<script type="text/javascript" src="./assets/oidc-client/oidc-client.min.js"></script>
+		<script type="text/javascript">
+			new Oidc.UserManager()
+					.signinSilentCallback()
+					.then(() => {})
+					.catch((err) => console.log(err));
+		</script>
+	</body>
+</html>

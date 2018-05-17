@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<script type="text/javascript" src="./assets/auth-oidc-config-template.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript" src="./assets/oidc-client/oidc-client.js"></script>
+		<script type="text/javascript">
+			if (!ngAuthOidcConfig) {
+				throw new Error('Missing configuration! Please provide one.');
+			}
+
+			const usrMngr = new Oidc.UserManager({ 
+				authority: ngAuthOidcConfig.authority,
+				client_id: ngAuthOidcConfig.client_id,
+				userStore: new Oidc.WebStorageStateStore({ store: window.localStorage })
+			});
+
+			usrMngr.removeUser()
+					.then((aa) => console.log(aa))
+					.catch((err) => console.log(err));
+		</script>
+	</body>
+</html>

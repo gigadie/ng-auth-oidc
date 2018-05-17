@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>NgAuthOidc</title>
+	<base href="/">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<style>
+		.auth-mask {
+			background-color: #FFF;
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.signout {
+			padding: 5px;
+			width: 250px;
+		}
+	</style>
+
+	<script type="text/javascript" src="/assets/auth-oidc-config-template.js"></script>
+</head>
+<body>
+	<h1>NG-Auth OIDC</h1>
+
+	<h1>This is a private page</h1>
+
+	<auth-guard signInUrl="/login.html"></auth-guard>
+	
+	<div class="signout">
+		<auth-signout></auth-signout>
+	</div>
+
+	<div class="auth-mask" style="">Loading...</div>
+
+	<script type="text/javascript" src="./assets/ng-auth-oidc.min.js"></script>
+
+	<script>
+		const authGuard = document.querySelector('auth-guard');
+		authGuard.addEventListener('onVerified', (data) => {
+			const authMask = document.querySelector('.auth-mask');
+			if (authMask) {
+				if (authMask.hasOwnProperty('remove')) {
+					authMask.remove();
+				} else {
+					authMask.parentNode.removeChild(authMask);
+				}
+			}
+		});
+	</script>
+</body>
+</html>
