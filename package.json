@@ -5,6 +5,12 @@
   "author": {
     "name": "Diego Fernandez"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gigadie/ng-auth-oidc.git"
+  },
+  "main": "dist/ng-auth-oidc/assets/ng-auth-oidc.min.js",
+  "unpkg": "dist/ng-auth-oidc/assets/ng-auth-oidc.min.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -58,5 +64,9 @@
     "tslint": "~5.9.1",
     "typescript": "~2.7.2",
     "yargs": "^11.0.0"
-  }
+  },
+  "files": [
+    "dist",
+    "demo"
+  ]
 }
