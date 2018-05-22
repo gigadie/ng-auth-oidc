@@ -40,11 +40,10 @@
 
 	<div class="auth-mask" style="">Loading...</div>
 
-	<script type="text/javascript" src="./assets/ng-auth-oidc.min.js"></script>
-
 	<script>
 		const authGuard = document.querySelector('auth-guard');
-		authGuard.addEventListener('onVerified', (data) => {
+		authGuard.addEventListener('onVerified', (event) => {
+			console.log(event.detail);
 			const authMask = document.querySelector('.auth-mask');
 			if (authMask) {
 				if (authMask.hasOwnProperty('remove')) {
@@ -54,6 +53,13 @@
 				}
 			}
 		});
+
+		authGuard.addEventListener('onRefreshed', (event) => {
+			console.log('Token refreshed');
+			console.log(event.detail);
+		});
 	</script>
+
+	<script type="text/javascript" src="./assets/ng-auth-oidc.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "ng-auth-oidc",
   "description": "OAuth2 Implicit Flow with OpenID Connect (e.g. identity-server4) implemented with Angular Elements",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "Diego Fernandez"
   },
@@ -80,6 +80,11 @@
     "OpenID",
     "Connect",
     "Custom Elements",
-    "Angular"
+    "Angular",
+    "identity-server4",
+    "identity server",
+    "identity-server",
+    "identity",
+    "server"
   ]
 }

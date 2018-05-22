@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { UserManager, UserManagerSettings, User, WebStorageStateStore } from 'oidc-client';
 
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +11,10 @@ export class AuthService {
 
 	private usrMngrSettings: any;
 	private manager: UserManager;
+	
 	private identity: User = null;
+	private _identitySource: Subject<User> = new Subject<User>();
+	public identity$: Observable<User> = this._identitySource.asObservable();
 
 	private user: any = null;
 	private _userSource: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -48,7 +51,7 @@ export class AuthService {
 	}
 
  	completeAuthentication(): Promise<void> {
-		console.debug('auth-completed');
+		console.log('auth-completed');
 		return this.manager.signinRedirectCallback()
 				.then(identity => {
 					this.setIdentity(identity);
@@ -66,13 +69,13 @@ export class AuthService {
 				.getUser()
 				.then((identity: User) => {
 					if (identity) {
-						console.debug('manager.getUser with identity');
+						console.log('manager.getUser with identity');
 						
 						this.setIdentity(identity);
 						resolve(identity);
 					} else if (window.location.pathname.indexOf('auth-completed') === -1) {
-						console.debug('manager.getUser without identity and not on auth-completed');
-						console.debug('trying manager.signinSilent to check if user is authenticated');
+						console.log('manager.getUser without identity and not on auth-completed');
+						console.log('trying manager.signinSilent to check if user is authenticated');
 						
 						this.tryRetrieveIdentity(resolve, reject);
 					}
@@ -104,8 +107,9 @@ export class AuthService {
 
 	private subscribeManagerEvents() {
 		this.manager.events.addUserLoaded((identity) => {
-			console.debug('User Loaded Event Handler');
+			console.log('User Loaded Event Handler');
 			this.setIdentity(identity);
+			this._identitySource.next(identity);
 		});
 		this.manager.events.addAccessTokenExpired(() => this.logout());
 	}

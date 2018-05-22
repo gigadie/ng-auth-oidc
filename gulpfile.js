@@ -38,6 +38,7 @@ gulp.task('prod-clean', () => {
 			'./dist/ng-auth-oidc/runtime.js',
 			'./dist/ng-auth-oidc/polyfills.js',
 			'./dist/ng-auth-oidc/main.js',
+			'./dist/ng-auth-oidc/styles.js',
 			'./dist/ng-auth-oidc/styles.css',
 			'./dist/ng-auth-oidc/*.html',
 			'./demo/main.html'

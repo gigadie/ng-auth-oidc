@@ -18,7 +18,8 @@ npm install ng-auth-oidc --save
 
 ## How to use
 You can always refer to the demo project, but it's pretty straightforward.
-In your application html file all you need to do is to load the configuration file, (there is an example in `demo/assets/auth-oidc-config-template.js`). Example of config file:
+Inside the `dist/` folder, you will find 2 files `auth-oidc-config-template.js` and `ng-auth-oidc.min.js`.
+Check the content of the configuration file `auth-oidc-config-template.js`, and modify it accordingly to your application settings, maybe renaming it `auth-oidc-config.js`. Example of config file:
 ```javascript
 /* User client settings for OpenID Connect Server*/
 var ngAuthOidcConfig = {
@@ -34,7 +35,7 @@ var ngAuthOidcConfig = {
 	silent_redirect_uri: 'url/to/this/app/silent-refresh.html'
 };
 ```
-Right after you need to load the library you can find in `dist/ng-auth-oidc/assets/ng-auth-oidc.min.js`. The order is necessary.
+Copy these two files where you think is appropriate. Right after you need to load both the configuration file and the library you can find in `ng-auth-oidc.min.js`. **The order is necessary**.
 #### This is how to load the library:
 ```html
 <script type="text/javascript" src="path/to/your/auth-oidc-config.js"></script>
@@ -42,7 +43,19 @@ Right after you need to load the library you can find in `dist/ng-auth-oidc/asse
 ```
 
 And then you are automatically able to use the Custom Elements in your html, which are the following:
-* **ng-auth-guard** - this element will be needed in every private/protected page of your application. It will be responsible of verifying the current user is autheticated. If the user is not autheticated it will redirect to a specific configurable page or by default to the `/login.html` page of your website. If the user is authenticated it will provide silent refresh (for this you need to configure a silent-refresh.html page in your project). This accepts a param `signInUrl` and exposes an event `onVerified` you can listen to.
+* **ng-auth-guard** - this element will be needed in every private/protected page of your application. It will be responsible of verifying the current user is autheticated:
+    - If the user is not autheticated it will redirect to a specific configurable page or by default to the `/login.html` page of your website.
+    - If the user is authenticated it will provide silent refresh (for this you need to configure a silent-refresh.html page in your project).
+
+  This elements accepts a parameter `signInUrl` and exposes two events, `onVerified` and `onRefreshed`, you can listen to. The first is triggered on verification of an authenticated user, the latter after each subsequent token refresh. Both onVerified and onRefreshed `event.detail` property will be defined as follows:
+  ```javascript
+  {
+	  identity: { ... } as User, // From oicd-client.js
+	  headers: {
+		  authorization: 'Bearer XXXYYYZZZ'
+	  }
+  }
+  ```
 * **ng-auth-login** - this element needs to be included in your `login.html` page. It renders a simple button, so you can style it the way you prefer, when clicked it triggers a redirection (with the configuration of your specific client) to the specified identity server uri.
 * **ng-auth-completed** - this element need to be included in your `auth-completed.html` page. Which you configured in the config file.
 * **ng-auth-signout** - this element needs to be included in every private/protected page where you want to give the user the ability to sign-out. It renders a simple button, so you can style it the way you prefer, when clicked it triggers a redirection (with the configuration of your specific client) to the specified identity server signout uri.
@@ -96,13 +109,12 @@ And then you are automatically able to use the Custom Elements in your html, whi
 	</div>
 	<div class="auth-mask" style="">Loading...</div>
 	
-    <!-- Load here the library -->
-	<script type="text/javascript" src="./assets/ng-auth-oidc.min.js"></script>
-
-    <!-- An example of subscribing to onVerified event -->
+    <!-- An example of subscribing to onVerified and onRefreshed events -->
 	<script>
 		const authGuard = document.querySelector('auth-guard');
-		authGuard.addEventListener('onVerified', (data) => {
+		authGuard.addEventListener('onVerified', (event) => {
+			console.log(event.detail);  // the identity and header bearer token
+										// you can use as you need in your app
 			const authMask = document.querySelector('.auth-mask');
 			if (authMask) {
 				if (authMask.hasOwnProperty('remove')) {
@@ -112,7 +124,15 @@ And then you are automatically able to use the Custom Elements in your html, whi
 				}
 			}
 		});
+
+		authGuard.addEventListener('onRefreshed', (event) => {
+			console.log('Token refreshed');
+			console.log(event.detail);
+		});
 	</script>
+
+	<!-- Load here the library -->
+	<script type="text/javascript" src="./assets/ng-auth-oidc.min.js"></script>
 </body>
 </html>
 ```
